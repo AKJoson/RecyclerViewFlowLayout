@@ -24,9 +24,10 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull BaseViewHolder baseViewHolder, int position) {
-        bindBaseViewHolder(baseViewHolder, position);
+        bindBaseViewHolder(baseViewHolder, listData.get(position), position);
     }
-    public abstract void bindBaseViewHolder(BaseViewHolder baseViewHolder, int position);
+
+    public abstract void bindBaseViewHolder(BaseViewHolder baseViewHolder, T item, int position);
 
     @Override
     public int getItemCount() {
@@ -37,11 +38,18 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseViewHolder
         listData.addAll(list);
         notifyDataSetChanged();
     }
-    public void updateData(List<T> list){
-        listData.clear();
-        listData.addAll(list);
-        notifyDataSetChanged();
+
+    public void updateData(List<T> list) {
+        if (list != null) {
+            listData = list;
+            notifyDataSetChanged();
+        }
     }
+
+    public void removeOneItem(int position) {
+        listData.remove(position);
+        notifyItemRangeChanged(position,listData.size()-position+1);
+}
     //you can add some method to Delete or Add some refer position.
 
 }

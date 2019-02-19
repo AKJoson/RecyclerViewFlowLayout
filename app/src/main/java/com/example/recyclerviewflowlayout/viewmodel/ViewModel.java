@@ -5,13 +5,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.databinding.library.baseAdapters.BR;
 import com.example.recyclerviewflowlayout.R;
 import com.example.recyclerviewflowlayout.base.BaseAdapter;
 import com.example.recyclerviewflowlayout.base.BaseViewHolder;
 import com.example.recyclerviewflowlayout.base.BaseViewModel;
+import com.example.recyclerviewflowlayout.flexbox.FlexDirection;
+import com.example.recyclerviewflowlayout.flexbox.FlexboxLayoutManager;
+import com.example.recyclerviewflowlayout.flexbox.JustifyContent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,25 +26,34 @@ public class ViewModel extends BaseViewModel {
 
     public ViewModel(AppCompatActivity activity) {
         super(activity);
-        for (int i = 0; i < 10; i++) {
-            list.add("data:" + i);
-        }
+        list.add("我的世界");
+        list.add("非请勿进");
+        list.add("优雅的谢幕");
+        list.add("感谢自己的认真付出");
+        list.add("伤口总会痊愈");
+        list.add("大舍大得，小舍小得");
 
-        adapter = new BaseAdapter<String>(new ArrayList<String>(), R.layout.item_recycler_layout) {
+        adapter = new BaseAdapter<String>(list, R.layout.item_recycler_layout) {
             @Override
-            public void bindBaseViewHolder(BaseViewHolder baseViewHolder, int position) {
-                baseViewHolder.getBinding().setVariable(BR.itemValue, list.get(position));
+            public void bindBaseViewHolder(BaseViewHolder baseViewHolder, String item, int position) {
+                baseViewHolder.getBinding().setVariable(BR.itemValue, item);
                 baseViewHolder.getBinding().setVariable(BR.viewModel, ViewModel.this);
                 baseViewHolder.getBinding().setVariable(BR.position, position);
                 baseViewHolder.getBinding().executePendingBindings();
             }
         };
-        adapter.addData(list);
-        layoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
+        FlexboxLayoutManager flexboxLayoutManager = new FlexboxLayoutManager(mActivity);
+        flexboxLayoutManager.setFlexDirection(FlexDirection.ROW);
+        flexboxLayoutManager.setJustifyContent(JustifyContent.FLEX_START);
+        layoutManager = flexboxLayoutManager;
     }
 
-    public void onItemClick(View textView, int position) {
-        ((TextView)textView).setSelected(!((TextView)textView).isSelected());
+    public void onItemClick(View textView, int position,String item) {
+        ((TextView) textView).setSelected(!((TextView) textView).isSelected());
+    }
+
+    public void ondeleteClick(View view, int position) {
+        adapter.removeOneItem(position);
     }
 
 }
